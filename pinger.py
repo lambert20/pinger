@@ -104,9 +104,9 @@ def get_opts(argv):
     #    inputfile = 'ip_list_inputfile.txt'
     inputfile = ''
     outputfile = ''
-    threads = 32
+    threads = 64
     subnets = ['192.168.0.0/26']
-    count = 40
+    count = 20
     try:
         opts, args = getopt.getopt(argv, "hs:c:t:c:i:o", [ "subnet=", "count=", "threads", "ifile=", "ofile="])
     except getopt.GetoptError:
@@ -157,6 +157,7 @@ def main(argv):
         for ip_str in subnet_list:
             l1 = l1 + [str(ip_str)]
 
+    l1 = list(set(l1))
     ping_object = Pinger()
     ping_results_list = []
 
@@ -175,8 +176,9 @@ def main(argv):
 
         if len(ping_results_list) > 1:
             diff_dead = diff(ping_results_list[1]['dead'], ping_results_list[0]['dead'])
-            print(time.asctime(time.localtime()), ' alive= ', len(list(ping_results_list[1]['alive'])), 'dead= ',
-                  len(list(ping_results_list[1]['dead'])), end='')
+            print(time.asctime(time.localtime()),
+                  ' alive= ', len(list(ping_results_list[1]['alive'])),
+                  'dead= ',len(list(ping_results_list[1]['dead'])),end='')
             diff_alive = diff(ping_results_list[1]['alive'], ping_results_list[0]['alive'])
             if len(diff_alive) > 0:
                 print('  born', diff_alive, 'died', diff_dead)
@@ -187,7 +189,8 @@ def main(argv):
 
                 #            add_ping_results_list_to_mongo([ping_results_list[1]])
         else:
-            print(time.asctime(time.localtime()), ' starting alive= ', len(list(ping_results_list[0]['alive'])))
+            print(time.asctime(time.localtime()), ' starting alive= ', len(list(ping_results_list[0]['alive'])),
+                  'dead= ',len(list(ping_results_list[0]['dead'])))
             print(time.asctime(time.localtime()), ' starting alive list= ', ping_results_list[0]['alive'])
 
         # clear lists active and dead
