@@ -104,12 +104,13 @@ def get_opts(argv):
     #    inputfile = 'ip_list_inputfile.txt'
     inputfile = ''
     outputfile = ''
+    threads = 32
     subnets = ['192.168.0.0/26']
     count = 40
     try:
-        opts, args = getopt.getopt(argv, "hi:o:s:c:", ["ifile=", "ofile=", "subnet=", "count="])
+        opts, args = getopt.getopt(argv, "hs:c:t:c:i:o", [ "subnet=", "count=", "threads", "ifile=", "ofile="])
     except getopt.GetoptError:
-        print('test.py -i <inputfile> -o <outputfile> -s <subnet list> -c <count>')
+        print('test.py -s <subnet list> -c <count> -t <threads> -i <inputfile> -o <outputfile>')
         exit(2)
     for opt, arg in opts:
         if opt == '-h':
@@ -120,6 +121,8 @@ def get_opts(argv):
             inputfile = arg
         elif opt in ("-o", "--ofile"):
             outputfile = arg
+        elif opt in ("-t", "--threads"):
+            threads = arg
         elif opt in ("-s", "--subnet"):
             subnets = subnets + arg.split(',')
         elif opt in ("-c", "--count"):
@@ -130,16 +133,16 @@ def get_opts(argv):
             read_data = f.read()
             subnets = subnets + read_data.replace('\t', '').replace('\n', '').split(',')
 
-    return inputfile, outputfile, subnets, int(count)
+    return inputfile, outputfile, subnets, int(count), int(threads)
 
 
 def main(argv):
     """business logic for when running this module as the primary one!"""
 
-    (inputfile, outputfile, subnets, ping_count) = get_opts(argv[1:])
+    (inputfile, outputfile, subnets, ping_count,thread_count) = get_opts(argv[1:])
 
     print('Starting ', time.asctime(time.localtime()), ' Program=', argv[0])
-    print('  ping_count=', ping_count, end='')
+    print('  ping_count=', ping_count, '   thread_count=', thread_count,end='')
     print('  input_file_name=', inputfile, '    output_file_name=', outputfile)
     print('  subnet_list=', subnets)
 
@@ -158,7 +161,7 @@ def main(argv):
     ping_results_list = []
 
     for a in range(ping_count):
-        ping_object.thread_count = 128
+        ping_object.thread_count = thread_count
         ping_object.hosts = l1[:]
         cur_result = ping_object.start()
         cur_result['time'].append(time.time())
