@@ -114,8 +114,12 @@ def get_opts(argv):
         exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('test.py -i <inputfile> -o <outputf'
-                  'ile> -s <subnet>')
+            print('pinger.py ')
+            print("     -s <subnet list> ie '192.168.0.0/29,192.168.0.128/27'")
+            print('     -c <count int> default=',count)
+            print('     -t <threads int> default=', threads)
+            print('     -i <inputfile> default=',inputfile)
+            print('     -o <outputfile> default=',outputfile)
             exit()
         elif opt in ("-i", "--ifile"):
             inputfile = arg
