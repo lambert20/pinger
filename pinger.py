@@ -109,7 +109,7 @@ def get_opts(argv):
     subnets = ['192.168.0.0/26']
     count = 20
     try:
-        opts, args = getopt.getopt(argv, "hs:c:t:c:i:o", [ "subnet=", "count=", "threads", "ifile=", "ofile="])
+        opts, args = getopt.getopt(argv, "hs:c:t:c:i:o", ["subnet=", "count=", "threads", "ifile=", "ofile="])
     except getopt.GetoptError:
         print('test.py -s <subnet list> -c <count> -t <threads> -i <inputfile> -o <outputfile>')
         exit(2)
@@ -117,10 +117,10 @@ def get_opts(argv):
         if opt == '-h':
             print('pinger.py ')
             print("     -s <subnet list> ie '192.168.0.0/29,192.168.0.128/27'")
-            print('     -c <count int> default=',count)
+            print('     -c <count int> default=', count)
             print('     -t <threads int> default=', threads)
-            print('     -i <inputfile> default=',inputfile)
-            print('     -o <outputfile> default=',outputfile)
+            print('     -i <inputfile> default=', inputfile)
+            print('     -o <outputfile> default=', outputfile)
             exit()
         elif opt in ("-i", "--ifile"):
             inputfile = arg
@@ -144,10 +144,10 @@ def get_opts(argv):
 def main(argv):
     """business logic for when running this module as the primary one!"""
 
-    (inputfile, outputfile, subnets, ping_count,thread_count) = get_opts(argv[1:])
+    (inputfile, outputfile, subnets, ping_count, thread_count) = get_opts(argv[1:])
 
     print('Starting ', time.asctime(time.localtime()), ' Program=', argv[0])
-    print('  ping_count=', ping_count, '   thread_count=', thread_count,end='')
+    print('  ping_count=', ping_count, '   thread_count=', thread_count, end='')
     print('  input_file_name=', inputfile, '    output_file_name=', outputfile)
     print('  subnet_list=', subnets)
 
@@ -174,7 +174,6 @@ def main(argv):
         cur_result_as_json = json.dumps(cur_result, sort_keys=True, indent=4)
         if len(cur_result_as_json) > 0 and len(outputfile) > 0:
             record_json_on_outfile(outputfile, cur_result_as_json)
-        # print(cur_result_as_json)
         ping_results_list.append(copy.deepcopy(cur_result))
         while len(ping_results_list) > 2:
             ping_results_list = ping_results_list[1:]
@@ -183,7 +182,7 @@ def main(argv):
             diff_dead = diff(ping_results_list[1]['dead'], ping_results_list[0]['dead'])
             print(time.asctime(time.localtime()),
                   ' alive= ', len(list(ping_results_list[1]['alive'])),
-                  'dead= ',len(list(ping_results_list[1]['dead'])),end='')
+                  'dead= ', len(list(ping_results_list[1]['dead'])), end='')
             diff_alive = diff(ping_results_list[1]['alive'], ping_results_list[0]['alive'])
             if len(diff_alive) > 0:
                 print('  born', diff_alive, 'died', diff_dead)
@@ -195,7 +194,7 @@ def main(argv):
                 #            add_ping_results_list_to_mongo([ping_results_list[1]])
         else:
             print(time.asctime(time.localtime()), ' starting alive= ', len(list(ping_results_list[0]['alive'])),
-                  'dead= ',len(list(ping_results_list[0]['dead'])))
+                  'dead= ', len(list(ping_results_list[0]['dead'])))
             print(time.asctime(time.localtime()), ' starting alive list= ', ping_results_list[0]['alive'])
 
         # clear lists active and dead
