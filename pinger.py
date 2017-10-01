@@ -105,13 +105,14 @@ def get_opts(argv):
     #    inputfile = 'ip_list_inputfile.txt'
     inputfile = ''
     outputfile = ''
+    mongo = 'N'
     threads = 64
     subnets = ['192.168.0.0/26']
     count = 20
     try:
-        opts, args = getopt.getopt(argv, "hs:c:t:c:i:o", ["subnet=", "count=", "threads", "ifile=", "ofile="])
+        opts, args = getopt.getopt(argv, "hs:c:t:c:i:o", ["subnet=", "count=", "threads", "ifile=", "ofile=","mongo="])
     except getopt.GetoptError:
-        print('test.py -s <subnet list> -c <count> -t <threads> -i <inputfile> -o <outputfile>')
+        print('test.py -s <subnet list> -c <count> -t <threads> -i <inputfile> -o <outputfile> -m ,<y/n>')
         exit(2)
     for opt, arg in opts:
         if opt == '-h':
@@ -132,22 +133,25 @@ def get_opts(argv):
             subnets = subnets + arg.split(',')
         elif opt in ("-c", "--count"):
             count = arg
+        elif opt in ("-m", "--mongo"):
+            mongo = arg
+
 
     if inputfile != '':
         with open(inputfile) as f:
             read_data = f.read()
             subnets = subnets + read_data.replace('\t', '').replace('\n', '').split(',')
 
-    return inputfile, outputfile, subnets, int(count), int(threads)
+    return inputfile, outputfile, subnets, int(count), int(threads), mongo
 
 
 def main(argv):
     """business logic for when running this module as the primary one!"""
 
-    (inputfile, outputfile, subnets, ping_count, thread_count) = get_opts(argv[1:])
+    (inputfile, outputfile, subnets, ping_count, thread_count, mongo_sw) = get_opts(argv[1:])
 
     print('Starting ', time.asctime(time.localtime()), ' Program=', argv[0])
-    print('  ping_count=', ping_count, '   thread_count=', thread_count, end='')
+    print('  ping_count=', ping_count, '   thread_count=', thread_count, '   mongo_sw=', mongo_sw, end='')
     print('  input_file_name=', inputfile, '    output_file_name=', outputfile)
     print('  subnet_list=', subnets)
 
@@ -190,8 +194,8 @@ def main(argv):
                 print('  born', diff_alive, 'died', diff_dead)
             else:
                 print('')
-
-                #            add_ping_results_list_to_mongo([ping_results_list[1]])
+            if 'Y' == mongo_sw[0].upper():
+                add_ping_results_list_to_mongo([ping_results_list[1]])
         else:
             print(time.asctime(time.localtime()), ' starting alive= ', len(list(ping_results_list[0]['alive'])),
                   'dead= ', len(list(ping_results_list[0]['dead'])))
