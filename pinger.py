@@ -107,7 +107,7 @@ def get_opts(argv):
     outputfile = ''
     mongo = 'N'
     threads = 64
-    subnets = ['192.168.0.0/26']
+    subnets = []
     count = 20
     try:
         opts, args = getopt.getopt(argv, "hs:c:t:c:i:o", ["subnet=", "count=", "threads", "ifile=", "ofile=","mongo="])
@@ -117,11 +117,11 @@ def get_opts(argv):
     for opt, arg in opts:
         if opt == '-h':
             print('pinger.py ')
-            print("     -s <subnet list> ie '192.168.0.0/29,192.168.0.128/27'")
-            print('     -c <count int> default=', count)
-            print('     -t <threads int> default=', threads)
-            print('     -i <inputfile> default=', inputfile)
-            print('     -o <outputfile> default=', outputfile)
+            print("   -s <subnet list> default=",subnets,"  ie '192.168.0.0/24' or '192.168.0.0/29,192.168.0.128/27'")
+            print('   -c <count int> default=', count)
+            print('   -t <threads int> default=', threads)
+            print('   -i <inputfile> default=', inputfile)
+            print('   -o <outputfile> default=', outputfile)
             exit()
         elif opt in ("-i", "--ifile"):
             inputfile = arg
